@@ -1,5 +1,5 @@
 {
-  "name": "frontend",
+  "name": "dotenv-guard",
   "private": true,
   "version": "0.0.0",
   "type": "module",
@@ -9,6 +9,7 @@
     "lint": "eslint .",
     "preview": "vite preview"
   },
+  "description": "DotEnv Guard — Encrypted environment variable manager (frontend)",
   "dependencies": {
     "react": "^19.1.1",
     "react-dom": "^19.1.1",

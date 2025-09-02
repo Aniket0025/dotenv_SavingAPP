@@ -68,7 +68,7 @@ export default function EnvPage() {
   return (
     <div className="page">
       <header className="topbar">
-        <div className="brand">DotEnv Saver</div>
+        <div className="brand">DotEnv Guard</div>
         <div className="actions">
           <button className="btn btn-ghost" onClick={logout}>Logout</button>
         </div>
