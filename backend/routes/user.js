@@ -1,5 +1,5 @@
 const {Router} = require("express");
-const UserModel = require("../db");
+const {UserModel, EnvVarModel} = require("../db");
 const jwt = require("jsonwebtoken");
 const dotenv = require("dotenv");
 const bcrypt = require("bcrypt");

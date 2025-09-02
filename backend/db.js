@@ -4,7 +4,7 @@ dotenv.config();
 
 mongoose.connect(process.env.MONGODB_URI);
 const Schema = mongoose.Schema;
-const ObjectID = mongoose.ObjectID; 
+const ObjectId = Schema.Types.ObjectId; 
  
 const UserSchema = new Schema({
     firstName: String,
@@ -13,6 +13,22 @@ const UserSchema = new Schema({
     password: String,
     
 })
-const UserModel = mongoose.model("user", UserSchema);
 
-module.exports = UserModel;
+const EnvVarSchema = new Schema({
+    userId: {type: ObjectId, ref: "user", required: true, index: true},
+    key:{type:String, required:true},
+    value: {type:String, required:true} 
+},
+{
+    timestamps:true
+});
+
+// Ensure a user cannot have duplicate keys
+EnvVarSchema.index({ userId: 1, key: 1 }, { unique: true });
+
+const UserModel = mongoose.model("user", UserSchema);
+const EnvVarModel = mongoose.model("envVar", EnvVarSchema);
+module.exports ={
+ UserModel,
+ EnvVarModel
+}
