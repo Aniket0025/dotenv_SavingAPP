@@ -7,6 +7,7 @@ const zod = require("zod");
 const { z } = require("zod");
 const {model} = require("mongoose");
 const {JWT_USER_PASSWORD}= require("../config");
+const {userMiddleware} = require("../middleware/user");
 
 dotenv.config();
 const userRouter = Router();
@@ -35,17 +36,17 @@ userRouter.post("/signin",async function(req, res) {
     try{
         const {email, password} =  req.body;
 
-        const user = UserModel.findOne({
+        const user = await UserModel.findOne({
             email:email
         });
 
         if(!user) {
-            res.status(404).json({message:"User not found"})
+            return res.status(404).json({message:"User not found"})
         }
         const isMatch = await bcrypt.compare(password, user.password);
         
         if(!isMatch) {
-            res.status(401).json({message:"Invalid credentials"})
+            return res.status(401).json({message:"Invalid credentials"})
         }
 
         const token = jwt.sign({
@@ -67,9 +68,3 @@ userRouter.post("/signin",async function(req, res) {
 module.exports = {
     userRouter: userRouter
 }
-
-
-
-
-
-
