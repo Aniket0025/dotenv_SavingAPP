@@ -112,6 +112,23 @@ export default function EnvPage() {
 function EnvRow({ item, onUpdate, onDelete }) {
   const [edit, setEdit] = useState(false);
   const [val, setVal] = useState(item.value);
+  const [copied, setCopied] = useState(false);
+
+  async function copyValue() {
+    try {
+      await navigator.clipboard.writeText(item.value ?? '');
+      setCopied(true);
+      setTimeout(()=>setCopied(false), 1200);
+    } catch (e) {
+      // Fallback for older browsers
+      const ta = document.createElement('textarea');
+      ta.value = item.value ?? '';
+      document.body.appendChild(ta);
+      ta.select();
+      try { document.execCommand('copy'); setCopied(true); setTimeout(()=>setCopied(false), 1200); } finally { document.body.removeChild(ta); }
+    }
+  }
+
   return (
     <tr>
       <td><code>{item.key}</code></td>
@@ -119,7 +136,28 @@ function EnvRow({ item, onUpdate, onDelete }) {
         {edit ? (
           <input value={val} onChange={(e)=>setVal(e.target.value)} />
         ) : (
-          <span className="mono">{item.value}</span>
+          <div className="value-cell">
+            <span className="mono">{item.value}</span>
+            <button
+              type="button"
+              className="btn btn-ghost copy-btn"
+              onClick={copyValue}
+              title={copied ? 'Copied' : 'Copy value'}
+              aria-label={copied ? 'Copied' : 'Copy value'}
+            >
+              {copied ? (
+                <>
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M20 6L9 17l-5-5"/></svg>
+                  <span>Copied</span>
+                </>
+              ) : (
+                <>
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg>
+                  <span>Copy</span>
+                </>
+              )}
+            </button>
+          </div>
         )}
       </td>
       <td>
